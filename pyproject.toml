@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "kompress_cache"
+version = "0.1.0"
+description = "A Redis-based cache that routes writes to the primary and reads from replicas with failover."
+readme = "README.md"
+license-files = [ "LICENSE" ]
+
+authors = [
+    { name = "Sudhir Ravindramohan", email = "sudhir.ravindramohan@utvyakta.com" },
+    { name = "Poovarasan", email = "poovarasan.v@utvyakta.com" },
+]
+
+dependencies = [
+    "redis[hiredis]",
+    "pydantic",
+    "fastapi",
+]

@@ -1,0 +1,13 @@
+line-length = 100
+
+[lint]
+select = ["E", "F", "W", "Q", "I", "RUF", "ANN"]
+ignore = ["E501", "RUF009"]
+preview = true
+
+[lint.per-file-ignores]
+"tests/**/*.py" = ["ANN"]  # Ignore type annotation checks in the tests folder
+
+[format]
+# Use double quotes for non-triple-quoted strings.
+quote-style = "double"

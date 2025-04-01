@@ -1,0 +1,38 @@
+image: python:slim
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+cache:
+  paths:
+    - .cache/pip
+
+
+tests:
+  tags:
+    - kompio
+  stage: test
+  before_script:
+    - pip3 install -r requirements.txt
+    - pip3 install -r test-requirements.txt
+  script:
+    - python -m unittest
+    - ruff check
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
+
+
+deploy:
+  tags:
+    - kompio
+  stage: deploy
+  before_script:
+    - python --version ; pip --version  # For debugging
+    - python -m venv venv
+    - source venv/bin/activate
+    - pip install build twine
+  script:
+    - python -m build --wheel
+    - TWINE_PASSWORD=${CI_JOB_TOKEN} TWINE_USERNAME=gitlab-ci-token python -m twine upload --skip-existing --repository-url ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/pypi dist/*
+  environment: production
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
