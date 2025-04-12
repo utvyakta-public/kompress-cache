@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "kompress_cache"
-version = "0.1.0"
+version = "0.1.1"
 description = "A Redis-based cache that routes writes to the primary and reads from replicas with failover."
 readme = "README.md"
 license-files = [ "LICENSE" ]
