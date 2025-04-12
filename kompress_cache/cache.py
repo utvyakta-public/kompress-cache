@@ -3,7 +3,7 @@ import logging
 import random
 from typing import Callable, Protocol
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ValidationError
 from redis.asyncio import Redis
 
 from .config import CONFIG
@@ -22,6 +22,14 @@ def get_redis(host: str, port: str | int) -> Redis:
         retry_on_timeout=True,
         socket_keepalive=True
     )
+
+
+def validate_json(json_data: str, model: BaseModel) -> bool:
+    try:
+        model.model_validate_json(json_data)
+        return True
+    except ValidationError:
+        return False
 
 
 class Loadable(Protocol):
@@ -87,7 +95,7 @@ class Cache:
 
     async def hget_l(self, cache_name: str, cache_key: str, loader: Loadable, model: BaseModel | None = None) -> str | BaseModel:
         value = await self.hget(cache_name, cache_key)
-        if not value:
+        if not value or (model and not validate_json(value, model)):
             logger.warning("Cache: %s, cache miss or invalid for: %s, loader: %s", cache_name, cache_key, loader)
             value = await loader.load()
 

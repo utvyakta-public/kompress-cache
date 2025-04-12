@@ -13,6 +13,9 @@ R = TypeVar("R")      # Return Type
 
 
 def handle_exception(exc: Exception) -> NoReturn:
+    if isinstance(exc, HTTPException):
+        raise exc
+
     logger.error("Redis Error: %s", exc)
     if logger.isEnabledFor(logging.DEBUG):
         logger.exception(exc)
