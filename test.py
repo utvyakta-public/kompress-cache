@@ -17,7 +17,7 @@ class ConfigTestCase(TestCase):
     def test_config_with_default(self) -> None:
         conf = config.Config()
         self.assertEqual(conf.REDIS_HOST, "localhost")
-        self.assertEqual(conf.REDIS_PORT, "6379")
+        self.assertEqual(conf.REDIS_PORT, 6379)
         self.assertEqual(conf.REDIS_REPLICAS_HOST_PORT, "")
         self.assertEqual(conf.REDIS_TIMEOUT, 5)
 
@@ -28,7 +28,7 @@ class ConfigTestCase(TestCase):
 
         conf = Config()
         self.assertEqual(conf.REDIS_HOST, "127.0.0.1")
-        self.assertEqual(conf.REDIS_PORT, "6378")
+        self.assertEqual(conf.REDIS_PORT, 6378)
         self.assertEqual(conf.REDIS_REPLICAS_HOST_PORT, "localhost:6380,localhost:6381")
         self.assertEqual(conf.REDIS_TIMEOUT, 10)
 
