@@ -7,22 +7,25 @@ cache:
 
 
 tests:
-  tags:
-    - kompio
   stage: test
   before_script:
-    - pip3 install -r requirements.txt
-    - pip3 install -r test-requirements.txt
+    - pip3 install -r requirements.txt -r test-requirements.txt
   script:
-    - python -m unittest
-    - ruff check
+    - python -m unittest --verbose
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
+
+static-analysis:
+  stage: test
+  before_script:
+    - pip3 install -r requirements.txt -r test-requirements.txt
+  script:
+    - ruff check .
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
 
 
 deploy:
-  tags:
-    - kompio
   stage: deploy
   before_script:
     - python --version ; pip --version  # For debugging
